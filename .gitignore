@@ -1,0 +1,22 @@
+# Python Virtual Environments
+venv/
+env/
+.venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases
+*.db
+*.sqlite3
+
+# Datasets (Keep heavy sensor logs local)
+*.csv
+*.dat
+*.parquet
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
