@@ -25,3 +25,12 @@ A binary classification model pulls the engineered features from SQLite. It eval
 ```bash
 git clone [https://github.com/shaivatva/iot-sensor-analytics.git](https://github.com/shaivatva/iot-sensor-analytics.git)
 cd iot-sensor-analytics
+
+## Results
+
+![Temperature Anomalies](assets/temperature_anomalies.png)
+
+**Model Performance:**
+*   **Precision:** [Paste your number from the notebook]
+*   **Recall:** [Paste your number from the notebook]
+*   **F1-Score:** [Paste your number from the notebook]
