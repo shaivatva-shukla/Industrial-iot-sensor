@@ -1,36 +1,40 @@
 # Industrial IoT Sensor Analytics Pipeline
 
-An automated data pipeline designed to ingest, clean, and analyze time-series sensor data from chemical engineering equipment (fluid mechanics tables and distillation columns). The system uses engineered features to predict imminent equipment anomalies before physical failure occurs.
 
-## Tech Stack
-* **ETL Pipeline:** Python, Pandas, NumPy
+
+##  Overview
+Manufacturing plants and chemical engineering labs collect millions of data points from physical sensors, but rarely utilize this raw data to predict equipment failures. 
+
+This project bridges the gap between physical thermodynamics and digital data infrastructure. It is an automated, end-to-end pipeline that ingests noisy IoT sensor data from fluid mechanics tables and distillation columns, engineers time-series features, and deploys a machine learning classification model to predict imminent system anomalies before a catastrophic failure occurs.
+
+##  The Physics & Domain Logic
+Unlike standard generic datasets, the data flowing through this pipeline is grounded in physical realities:
+* **Fluid Mechanics Constraints:** Pipe length parameters ($L$) are strictly standardized to exactly 186 cm across test cases.
+* **Mass Transfer:** Distillation supply feed calculations specifically track the mass of impurities ($M$) in grams, utilizing rate-of-change gradients to detect fouling or blockages.
+* **Realistic Sensor Noise:** The data simulates real-world industrial environments by accounting for gradual sensor drift, latent heat delays, and minor calibration errors, preventing the model from relying on artificial, perfectly linear splits.
+
+##  Pipeline Architecture
+
+### 1. Data Mocking & Ingestion (`data_generator.py`)
+Generates 10,000 rows of time-series IoT logs tracking temperature, pressure, and impurity mass. Injects subtle, sub-threshold anomalies to simulate early-warning equipment failures (e.g., slow valve leaks) rather than obvious catastrophic bursts.
+
+### 2. ETL & Feature Engineering (`etl_pipeline.py`)
+Processes the raw CSV data using **Pandas**. 
+* Calculates 5-minute rolling averages for heat and pressure.
+* Computes gradients (rate of change) for the mass of impurities.
+* Cleans null values and loads the processed features into a local **SQLite** database (`sensor_features` table) for efficient querying.
+
+### 3. Predictive Maintenance Model (`train_model.py`)
+Queries the SQLite database and trains a **Scikit-Learn Logistic Regression** model. By analyzing the engineered time-series features alongside raw inputs, the model successfully identifies overlapping, non-obvious equipment anomalies, outputting a comprehensive classification report (Precision, Recall, F1-Score).
+
+##  Tech Stack
+* **Data Engineering & ETL:** Python, Pandas, NumPy
 * **Database:** SQLite
-* **Machine Learning:** Scikit-Learn (Logistic Regression)
+* **Machine Learning:** Scikit-Learn
 
-## Architecture
+##  How to Run Locally
 
-### 1. Data Ingestion & Engineering (ETL)
-The pipeline ingests raw time-series IoT logs tracking physical parameters like pressure, temperature, and mass transfer. During the cleaning phase, domain-specific constraints are enforced:
-* Standardizes fluid mechanics pipe length ($L$) to exactly 186 cm across all test cases.
-* Processes distillation supply feeds by strictly treating the parameter $M$ as the mass of impurities, using molecular weight to dynamically calculate moles.
-
-The script then generates 5-minute rolling averages for temperature and pressure, calculates the rate of change for mass transfer spikes, and loads the cleaned data into a local SQLite database (`sensor_features`).
-
-### 2. Predictive Maintenance Model
-A binary classification model pulls the engineered features from SQLite. It evaluates the rolling gradients and physical parameter deviations to predict the `anomaly_detected` flag, effectively acting as an early warning system for lab equipment.
-
-## Local Setup
-
-### 1. Clone the repository
+**1. Clone the repository:**
 ```bash
-git clone [https://github.com/shaivatva/iot-sensor-analytics.git](https://github.com/shaivatva/iot-sensor-analytics.git)
-cd iot-sensor-analytics
-
-## Results
-
-![Temperature Anomalies](assets/temperature_anomalies.png)
-
-**Model Performance:**
-*   **Precision:** [Paste your number from the notebook]
-*   **Recall:** [Paste your number from the notebook]
-*   **F1-Score:** [Paste your number from the notebook]
+git clone [https://github.com/shaivatva-shukla/Industrial-iot-sensor.git](https://github.com/shaivatva-shukla/Industrial-iot-sensor.git)
+cd Industrial-iot-sensor
